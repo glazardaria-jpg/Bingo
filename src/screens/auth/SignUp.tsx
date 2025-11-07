@@ -1,18 +1,22 @@
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useMemo, useState } from 'react';
 import {
-  Image,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { CustomButton, Input } from '../../components/common';
-import { COLORS, FONTS } from '../../theme';
 
-import { useNavigation } from '@react-navigation/native';
+import { AuthLogo } from '../../components/auth';
+import { CustomButton, Input } from '../../components/common';
 import { SCREEN_NAMES } from '../../constants';
 import { useAuth, useToast } from '../../hooks';
+import { COLORS, FONTS } from '../../theme';
+import type { AuthStackParamList } from '../../types/navigation.type';
 
 export const SignUpScreen: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -24,9 +28,19 @@ export const SignUpScreen: React.FC = () => {
 
   const { signUp, loading } = useAuth();
   const { showToast } = useToast();
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
 
-  const isFormValid = useMemo(() => firstName && lastName && email && password && confirmPassword && agreeTerms, [firstName, lastName, email, password, confirmPassword, agreeTerms]);
+  const isFormValid = useMemo(
+    () =>
+      firstName &&
+      lastName &&
+      email &&
+      password &&
+      confirmPassword &&
+      agreeTerms,
+    [firstName, lastName, email, password, confirmPassword, agreeTerms]
+  );
 
   const handleSubmit = async () => {
     if (!isFormValid) {
@@ -40,8 +54,17 @@ export const SignUpScreen: React.FC = () => {
     }
 
     try {
-      await signUp(firstName, lastName, email, password);
-      showToast('Account created successfully!', 'success');
+      const { data: user } = await signUp(firstName, lastName, email, password);
+
+      if (!user.id) {
+        showToast('Failed to get user information', 'error');
+        return;
+      }
+
+      navigation.navigate(SCREEN_NAMES._AUTH.VERIFY_CODE, {
+        email: user.email,
+        type: 'account_activation',
+      });
     } catch (err) {
       showToast(
         err instanceof Error ? err.message : 'Something went wrong',
@@ -59,18 +82,19 @@ export const SignUpScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.select({ ios: 'padding', android: 'height' })}
+    >
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
+        <AuthLogo />
+
         <View style={styles.header}>
-          <Image
-            source={require('../../assets/images/auth/signin-logo.png')}
-            style={styles.logo}
-          />
           <Text style={styles.title}>SIGN UP</Text>
         </View>
 
@@ -112,7 +136,6 @@ export const SignUpScreen: React.FC = () => {
             secureTextEntry
           />
 
-          {/* Terms and Policy Agreement */}
           <TouchableOpacity
             style={styles.termsContainer}
             onPress={toggleTermsAgreement}
@@ -138,18 +161,21 @@ export const SignUpScreen: React.FC = () => {
             loading={loading}
           />
 
-          {/* Sign In Section */}
           <View style={styles.signInContainer}>
             <Text style={styles.signInText}>Already have an account? </Text>
-            <TouchableOpacity onPress={handleSignInNavigation}>
-              <Text style={styles.signInLink}>Sign In</Text>
-            </TouchableOpacity>
+            <CustomButton
+              text="Sign In"
+              onPress={handleSignInNavigation}
+              variant="default"
+              buttonStyle={styles.signInButton}
+              textStyle={styles.signInButtonText}
+            />
           </View>
         </View>
 
         <View style={styles.bottomSpacing} />
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -163,18 +189,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+    justifyContent: 'center',
     paddingHorizontal: 24,
-    paddingTop: 32,
+    padding: 32,
   },
   header: {
     alignItems: 'center',
     marginBottom: 16,
-  },
-  logo: {
-    width: 56,
-    height: 56,
-    borderRadius: 12,
-    marginBottom: 8,
   },
   title: {
     fontFamily: FONTS.family.poppinsBold,
@@ -254,12 +275,16 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.family.poppinsRegular,
     fontSize: 14,
   },
-  signInLink: {
+  signInButton: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+  },
+  signInButtonText: {
     color: COLORS.blue.indigo,
     fontFamily: FONTS.family.poppinsBold,
     fontSize: 14,
   },
   bottomSpacing: {
-    height: 24,
+    height: 48,
   },
 });
