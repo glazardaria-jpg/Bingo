@@ -89,3 +89,8 @@ yarn-error.log
 src/constants/secrets.ts
 android/app/google-services.json
 ios/GoogleService-Info.plist
+
+# Licensed sound effects (Epidemic Sound) — not redistributable; add locally, see README
+src/assets/sounds/
+android/app/src/main/res/raw/
+ios/*.mp3

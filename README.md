@@ -2,6 +2,10 @@
 
 A group wellness app that transforms habit-building into a fun and motivating game. Each challenge is structured around a Bingo board of health-related tasks, where players check off completed items weekly, weigh in, and earn points in a supportive, competitive group setting.
 
+**Who it's for:** friends, families, workplaces and community groups who want to build healthy habits together. One person organizes a challenge and invites others as players.
+
+**Status:** active development. Version 1.1.3 of the React Native client (iOS + Android). This repository holds the mobile app only; the backend API is a separate project. Planned work is in [ROADMAP.md](ROADMAP.md).
+
 ## 🎯 Product Overview
 
 Health Bingo operates on a pay-per-challenge model with no subscriptions. Players join for free, while organizers pay once per challenge, choosing from flexible pricing tiers based on group size, challenge length, and premium features.
@@ -149,11 +153,13 @@ One-Time Payment Per Challenge (No Subscription)
 
 ## 🛠️ Technical Stack
 
-- **Frontend:** React Native
-- **State Management:** Zustand
-- **Remote State Management:** React Query (TanStack Query)
-- **Navigation:** React Navigation
-- **Type Safety:** TypeScript
+- **Framework:** React Native 0.78, React 19, TypeScript
+- **State Management:** Zustand (persisted with AsyncStorage)
+- **Navigation:** React Navigation (bottom tabs + native stack)
+- **Auth:** Google Sign-In, Sign in with Apple
+- **Payments:** Stripe (Android), Apple In-App Purchase via react-native-iap (iOS)
+- **Push Notifications:** Firebase Cloud Messaging
+- **Other:** moment-timezone, react-native-image-picker, react-native-sound
 
 ## 📱 Getting Started
 
@@ -170,6 +176,13 @@ cp src/constants/secrets.example.ts src/constants/secrets.ts             # Strip
 cp android/app/google-services.example.json android/app/google-services.json
 cp ios/GoogleService-Info.example.plist ios/GoogleService-Info.plist
 ```
+
+### Sound effects
+The sound effects are licensed (Epidemic Sound) and can't be redistributed, so they aren't in the repo. The app expects these MP3 files, which you can replace with any sounds you own or with free/CC0 ones:
+
+`complete_card`, `lets_go`, `new_board`, `task_complete_bubble`, `task_complete_button`, `task_complete_mouth`, `task_complete_plop`, `task_complete_ui`
+
+Put them (as `<name>.mp3`) in both `android/app/src/main/res/raw/` and `ios/`. Name mapping lives in `src/services/sound.service.ts`.
 
 Other non-secret settings (API base URL, Apple product IDs, timezone) are in `src/constants/config.ts`.
 
@@ -192,13 +205,15 @@ npm run android
 npm test
 ```
 
-## 📊 Analytics & Event Tracking
+## 📊 Analytics & Event Tracking (planned)
+
+Not implemented yet. See [ROADMAP.md](ROADMAP.md).
 
 - Track conversion from prompt views to upgrade
 - Track engagement drop-off points (e.g., days of inactivity)
 - Track popular challenge categories and feature usage
 
-## 🎁 Optional Enhancements
+## 🎁 Optional Enhancements (planned)
 
 ### Gamified Upsell
 - Offer milestone-based rewards or discount coupons (e.g., after completing first challenge)
