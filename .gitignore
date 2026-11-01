@@ -81,3 +81,11 @@ yarn-error.log
 .kiro/steering/byterover-rules.md
 .qoder/rules/byterover-rules.md
 .augment/rules/byterover-rules.md
+
+# Local secrets & Firebase config (use the *.example files as templates)
+.env
+.env.*
+!.env.example
+src/constants/secrets.ts
+android/app/google-services.json
+ios/GoogleService-Info.plist

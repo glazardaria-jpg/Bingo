@@ -2,16 +2,14 @@
 export const API_BASE_URL = 'https://healthbingo-backend-dev-69f9daf23457.herokuapp.com';
 
 // Stripe Configuration
-export const STRIPE_PUBLISHABLE_KEY =
-  'pk_test_REDACTED'; // Replace with your actual Stripe publishable key
 export const STRIPE_MERCHANT_IDENTIFIER = 'merchant.com.healthbingo.app';
 
-// Google Sign-In Configuration
-export const GOOGLE_WEB_CLIENT_ID =
-  '178210706294-2otdnft4vm0cbfvkb1l92bef3av6v7un.apps.googleusercontent.com';
-
-export const GOOGLE_IOS_CLIENT_ID =
-  '178210706294-nm0nm7bof1ov4ubfhgv845ur8olufdg2.apps.googleusercontent.com';
+// Keys and OAuth client IDs live in secrets.ts (gitignored) — see secrets.example.ts
+export {
+  STRIPE_PUBLISHABLE_KEY,
+  GOOGLE_WEB_CLIENT_ID,
+  GOOGLE_IOS_CLIENT_ID,
+} from './secrets';
 
 // Sign in with Apple — Android web-OAuth flow only (iOS uses the native bundle id).
 // APPLE_SERVICE_ID = the Apple "Services ID" configured for Sign in with Apple.

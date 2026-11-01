@@ -162,23 +162,34 @@ One-Time Payment Per Challenge (No Subscription)
 - React Native development environment
 - Android Studio / Xcode
 
+### Configuration
+Keys and Firebase config are not committed. Create your local copies from the templates and fill in your own values:
+
+```bash
+cp src/constants/secrets.example.ts src/constants/secrets.ts             # Stripe key, Google OAuth client IDs
+cp android/app/google-services.example.json android/app/google-services.json
+cp ios/GoogleService-Info.example.plist ios/GoogleService-Info.plist
+```
+
+Other non-secret settings (API base URL, Apple product IDs, timezone) are in `src/constants/config.ts`.
+
 ### Installation
 ```bash
 # Install dependencies
-yarn install
+npm install
 
 # iOS
 cd ios && pod install && cd ..
-yarn ios
+npm run ios
 
 # Android
-yarn android
+npm run android
 ```
 
 ## 🧪 Testing
 
 ```bash
-yarn test
+npm test
 ```
 
 ## 📊 Analytics & Event Tracking
@@ -194,7 +205,7 @@ yarn test
 
 ## 📄 License
 
-This project is proprietary software. All rights reserved.
+Released under the [MIT License](LICENSE).
 
 ---
 
